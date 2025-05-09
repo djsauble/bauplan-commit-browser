@@ -1,4 +1,10 @@
 import React, { useState, useRef } from 'react';
+import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
+import 'react-calendar/dist/Calendar.css';
+
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface FilterBarProps {
   onMessageFilterChange: (filter: string) => void;
@@ -16,23 +22,15 @@ const FilterBar: React.FC<FilterBarProps> = ({
   authors,
 }) => {
   const [messageFilter, setMessageFilter] = useState('');
-  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
+  const [dateRange, setDateRange] = useState<Value>(null);
   const [authorFilter, setAuthorFilter] = useState('');
   const [parentFilter, setParentFilter] = useState('');
-  const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
   const [isAuthorDropdownOpen, setIsAuthorDropdownOpen] = useState(false);
-  const dateDropdownRef = useRef<HTMLDivElement>(null);
   const authorDropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle outside click for dropdowns
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dateDropdownRef.current &&
-        !dateDropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDateDropdownOpen(false);
-      }
       if (
         authorDropdownRef.current &&
         !authorDropdownRef.current.contains(event.target as Node)
@@ -53,10 +51,15 @@ const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   // Date range picker logic
-  const handleDateRangeChange = (start: string, end: string) => {
-    setDateRange({ start, end });
-    setIsDateDropdownOpen(false);
-    onDateFilterChange(`${start}~${end}`);
+  const handleDateRangeChange = (value: Value) => {
+    setDateRange(value);
+    if (Array.isArray(value) && value[0] && value[1]) {
+      const start = value[0].toISOString().split('T')[0];
+      const end = value[1].toISOString().split('T')[0];
+      onDateFilterChange(`${start}~${end}`);
+    } else {
+      onDateFilterChange('');
+    }
   };
 
   // Author dropdown logic
@@ -75,11 +78,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
       .toUpperCase()
       .substring(0, 2);
   };
-
-  // Format date range label
-  const dateLabel = dateRange
-    ? `${dateRange.start} - ${dateRange.end}`
-    : 'Dates';
 
   // Find selected author for label
   const selectedAuthor = authors.find(a => a.email === authorFilter || a.name === authorFilter);
@@ -108,40 +106,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
         className="filter"
         style={{ minWidth: 180 }}
       />
-      {/* Dates Dropdown */}
-      <div className="filter" style={{ position: 'relative', minWidth: 180 }} ref={dateDropdownRef}>
-        <div
-          className="dropdown-label"
-          onClick={() => setIsDateDropdownOpen(open => !open)}
-          style={{ cursor: 'pointer', userSelect: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-        >
-          {dateLabel}
-          <span style={{ marginLeft: 8 }}>▼</span>
-        </div>
-        {isDateDropdownOpen && (
-          <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 10, background: '#fff', border: '1px solid #eee', borderRadius: 6, padding: 16, minWidth: 240, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <label style={{ fontSize: 13, color: '#666' }}>Start date</label>
-              <input
-                type="date"
-                value={dateRange?.start || ''}
-                onChange={e => handleDateRangeChange(e.target.value, dateRange?.end || e.target.value)}
-                style={{ marginBottom: 8 }}
-              />
-              <label style={{ fontSize: 13, color: '#666' }}>End date</label>
-              <input
-                type="date"
-                value={dateRange?.end || ''}
-                min={dateRange?.start || ''}
-                onChange={e => handleDateRangeChange(dateRange?.start || e.target.value, e.target.value)}
-              />
-              <button
-                style={{ marginTop: 12, padding: '6px 12px', borderRadius: 4, border: 'none', background: '#eee', cursor: 'pointer' }}
-                onClick={() => { setDateRange(null); onDateFilterChange(''); setIsDateDropdownOpen(false); }}
-              >Clear</button>
-            </div>
-          </div>
-        )}
+      {/* Date Range Picker */}
+      <div className="filter" style={{ minWidth: 180 }}>
+        <DateRangePicker
+          onChange={handleDateRangeChange}
+          value={dateRange}
+          clearIcon={null}
+          calendarIcon={null}
+          format="y-MM-dd"
+          className="date-range-picker"
+        />
       </div>
       {/* Authors Dropdown */}
       <div className="filter" style={{ position: 'relative', minWidth: 180 }} ref={authorDropdownRef}>
