@@ -15,7 +15,7 @@ A FastAPI application that provides an API for browsing branches and commits fro
 ## Setup
 
 1. Clone the repository
-2. Create a `.env` file in the root directory with your Bauplan API key:
+2. Create a `.env` file in this directory with your Bauplan API key:
    ```
    BPLN_KEY=your_bauplan_api_key_here
    ```
@@ -38,9 +38,3 @@ The API will be available at http://localhost:8000
 - `GET /`: API health check
 - `GET /api/branches`: Get list of all branches
 - `GET /api/branches/{branch_id}/commits`: Get all commits for a specific branch
-
-## Running Tests
-
-```bash
-uv run pytest
-```
