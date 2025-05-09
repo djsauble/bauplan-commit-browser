@@ -42,6 +42,9 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
 
   const mergedBranch = extractMergedBranch(commit.message);
   const handleBranchClick = (branchName: string) => {
+    // Don't do anything if branchName is empty
+    if (!branchName) return;
+
     // Update URL and reload to switch branches
     if (commit.branch_id !== branchName) {
       // Set the query parameter and reload the page
@@ -69,15 +72,15 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
         <span className="author-name">{commit.author?.name}</span>
         <span className="author-email">&lt;{commit.author?.email}&gt;</span>
 
-        {mergedBranch && (
+        {commit.mergedFrom && (
           <span className="merge-info" style={{ marginLeft: 'auto' }}>
             Merged from <a
               href="#"
-              onClick={(e) => { e.preventDefault(); handleBranchClick(mergedBranch); }}
+              onClick={(e) => { e.preventDefault(); handleBranchClick(commit.mergedFrom || ''); }}
               className="branch-label"
               style={{ color: '#0066cc', textDecoration: 'none' }}
             >
-              <span className="branch-icon">⎇</span>{mergedBranch}
+              <span className="branch-icon">⎇</span>{commit.mergedFrom}
             </a>
           </span>
         )}

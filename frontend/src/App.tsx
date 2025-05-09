@@ -40,16 +40,28 @@ const App: React.FC = () => {
         const queryParams = new URLSearchParams(window.location.search);
         const branchParam = queryParams.get('branch');
 
-        // Set selected branch (priority: URL param > default first branch)
+        // Set selected branch (priority: URL param > main branch > default first branch)
         if (branchParam) {
           // Check if branch exists in available branches
           if (branchesData.some(branch => branch.id === branchParam)) {
             setSelectedBranch(branchParam);
-          } else if (branchesData.length > 0) {
-            setSelectedBranch(branchesData[0].id);
+          } else {
+            // If branch doesn't exist, find and use 'main' branch
+            const mainBranch = branchesData.find(branch => branch.id === 'main');
+            if (mainBranch) {
+              setSelectedBranch('main');
+            } else if (branchesData.length > 0) {
+              setSelectedBranch(branchesData[0].id);
+            }
           }
         } else if (branchesData.length > 0 && !selectedBranch) {
-          setSelectedBranch(branchesData[0].id);
+          // No branch specified, use 'main' if available
+          const mainBranch = branchesData.find(branch => branch.id === 'main');
+          if (mainBranch) {
+            setSelectedBranch('main');
+          } else {
+            setSelectedBranch(branchesData[0].id);
+          }
         }
 
         setError(null);
@@ -124,6 +136,7 @@ const App: React.FC = () => {
           authorFilter={authorFilter}
           parentFilter={parentFilter}
           currentBranch={selectedBranch}
+          availableBranches={branches.map(branch => branch.id)}
           onBranchChange={handleBranchChange}
         />
       )}

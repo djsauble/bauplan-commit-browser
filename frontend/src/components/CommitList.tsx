@@ -9,6 +9,7 @@ interface CommitListProps {
   authorFilter: string;
   parentFilter: string;
   currentBranch: string;
+  availableBranches?: string[]; // Add available branches
   onBranchChange?: (branchId: string) => void;
 }
 
@@ -19,6 +20,7 @@ const CommitList: React.FC<CommitListProps> = ({
   authorFilter,
   parentFilter,
   currentBranch,
+  availableBranches = [],
   onBranchChange,
 }) => {
   // Apply filters
@@ -51,13 +53,27 @@ const CommitList: React.FC<CommitListProps> = ({
     return true;
   });
 
+  // Process commits to add mergedFrom property only if the branch exists
+  const processedCommits = filteredCommits.map(commit => {
+    const mergedBranch = commit.message.match(/^Merge\s+(.+?)\s+into\s+(.+?)$/i);
+    const branchName = mergedBranch && mergedBranch.length > 1 ? mergedBranch[1] : null;
+
+    // Check if the extracted branch name exists in available branches
+    const commitWithMerge = {...commit} as CommitWithMergeInfo;
+    if (branchName && availableBranches.includes(branchName)) {
+      commitWithMerge.mergedFrom = branchName;
+    }
+
+    return commitWithMerge;
+  });
+
   return (
     <ul className="commit-list">
-      {filteredCommits.length > 0 ? (
-        filteredCommits.map(commit => (
+      {processedCommits.length > 0 ? (
+        processedCommits.map(commit => (
           <CommitItem
             key={commit.id}
-            commit={commit as CommitWithMergeInfo}
+            commit={commit}
             currentBranch={currentBranch}
           />
         ))
