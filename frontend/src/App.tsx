@@ -6,7 +6,6 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import { fetchBranches, fetchCommitsByBranch } from './api/bauplanApi';
 import { Branch, Commit } from './types';
-import './styles/theme.css';
 
 const App: React.FC = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
@@ -20,6 +19,8 @@ const App: React.FC = () => {
   const [dateFilter, setDateFilter] = useState<string>('');
   const [authorFilter, setAuthorFilter] = useState<string>('');
   const [parentFilter, setParentFilter] = useState<string>('');
+
+  const [authors, setAuthors] = useState<{ name?: string; email?: string }[]>([]);
 
   // Read branch from URL query parameter on mount
   useEffect(() => {
@@ -87,6 +88,15 @@ const App: React.FC = () => {
           setIsLoading(true);
           const commitsData = await fetchCommitsByBranch(selectedBranch);
           setCommits(commitsData);
+          // Extract unique authors
+          const uniqueAuthors = Array.from(
+            new Map(
+              commitsData
+                .filter(c => c.author)
+                .map(c => [c.author?.email, c.author])
+            ).values()
+          ).filter(Boolean) as { name?: string; email?: string }[];
+          setAuthors(uniqueAuthors);
           setError(null);
 
           // Update URL with the selected branch
@@ -133,6 +143,7 @@ const App: React.FC = () => {
             onDateFilterChange={setDateFilter}
             onAuthorFilterChange={setAuthorFilter}
             onParentFilterChange={setParentFilter}
+            authors={authors}
           />
 
           {isLoading ? (
