@@ -1,6 +1,7 @@
-- Use TypeScript and React for the frontend (single-page web app)
-- Use Python and FastAPI for the backend
+- Use TypeScript, npm, and React for the frontend (single-page web app)
+- Use Python, uv, and FastAPI for the backend
 - Use the official Bauplan Python SDK to authenticate to the Bauplan API
+- Use the Bauplan CLI (bauplan) as a tool to explore the available data, as needed.
 - Reference the Bauplan docs at docs.bauplanlabs.com for client API details (this app is focused on the get_commits endpoint)
 - Store secrets in .env (e.g. BPLN_KEY is the Bauplan API key)
 - Keep README.md updated and ensure it's clear and well-structured
