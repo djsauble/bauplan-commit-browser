@@ -70,7 +70,7 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
             <a
               href="#"
               onClick={(e) => { e.preventDefault(); handleBranchClick(mergedBranch); }}
-              style={{ color: '#0066cc', textDecoration: 'none' }}
+              style={{ color: 'var(--bauplan-blue)', textDecoration: 'none' }}
             >
               ⎇ {branchName}
             </a>
@@ -92,13 +92,7 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
         {renderCommitMessage(commit.message, commit.mergedFrom)}
       </div>
       <div className="commit-author">
-        <div className="author-avatar" style={{
-          backgroundColor: '#ddd',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '12px'
-        }}>
+        <div className="author-avatar">
           {getInitials(commit.author?.name)}
         </div>
         <span className="author-name">{commit.author?.name}</span>

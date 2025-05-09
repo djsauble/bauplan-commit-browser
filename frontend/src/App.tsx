@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import BranchSelector from './components/BranchSelector';
 import FilterBar from './components/FilterBar';
 import CommitList from './components/CommitList';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
 import { fetchBranches, fetchCommitsByBranch } from './api/bauplanApi';
 import { Branch, Commit } from './types';
+import './styles/theme.css';
 
 const App: React.FC = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
@@ -110,36 +113,46 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <BranchSelector
-        branches={branches}
-        selectedBranch={selectedBranch}
-        onBranchChange={handleBranchChange}
-      />
+    <div className="bauplan-layout">
+      <Sidebar activeItem="commits" />
+      <div className="bauplan-main">
+        <Header username="djsauble" />
+        <div className="bauplan-content">
+          <h1 className="content-title">Commit Browser</h1>
+          <div className="branch-selector-group">
+            <label className="branch-selector-label">Branch</label>
+            <BranchSelector
+              branches={branches}
+              selectedBranch={selectedBranch}
+              onBranchChange={handleBranchChange}
+            />
+          </div>
 
-      <FilterBar
-        onMessageFilterChange={setMessageFilter}
-        onDateFilterChange={setDateFilter}
-        onAuthorFilterChange={setAuthorFilter}
-        onParentFilterChange={setParentFilter}
-      />
+          <FilterBar
+            onMessageFilterChange={setMessageFilter}
+            onDateFilterChange={setDateFilter}
+            onAuthorFilterChange={setAuthorFilter}
+            onParentFilterChange={setParentFilter}
+          />
 
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <div style={{ color: 'red' }}>{error}</div>
-      ) : (
-        <CommitList
-          commits={commits}
-          messageFilter={messageFilter}
-          dateFilter={dateFilter}
-          authorFilter={authorFilter}
-          parentFilter={parentFilter}
-          currentBranch={selectedBranch}
-          availableBranches={branches.map(branch => branch.id)}
-          onBranchChange={handleBranchChange}
-        />
-      )}
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : error ? (
+            <div style={{ color: 'red' }}>{error}</div>
+          ) : (
+            <CommitList
+              commits={commits}
+              messageFilter={messageFilter}
+              dateFilter={dateFilter}
+              authorFilter={authorFilter}
+              parentFilter={parentFilter}
+              currentBranch={selectedBranch}
+              availableBranches={branches.map(branch => branch.id)}
+              onBranchChange={handleBranchChange}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
