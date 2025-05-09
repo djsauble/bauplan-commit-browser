@@ -34,13 +34,7 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
       .substring(0, 2);
   };
 
-  // Extract branch name from merge message
-  const extractMergedBranch = (message: string): string | null => {
-    const mergeMatch = message.match(/^Merge\s+(.+?)\s+into\s+(.+?)$/i);
-    return mergeMatch && mergeMatch.length > 1 ? mergeMatch[1] : null;
-  };
-
-  const mergedBranch = extractMergedBranch(commit.message);
+  // No longer needed as we handle this in renderCommitMessage
   const handleBranchClick = (branchName: string) => {
     // Don't do anything if branchName is empty
     if (!branchName) return;
@@ -54,11 +48,49 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
     }
   };
 
+  // Function to render commit message with branch name as a link if it exists
+  const renderCommitMessage = (message: string, mergedBranch?: string) => {
+    if (!mergedBranch) {
+      // If no merged branch or branch doesn't exist, return the plain message
+      return message;
+    }
+
+    // For merge commits, highlight the branch name as a link
+    const mergeRegex = /^Merge\s+(.+?)\s+into\s+(.+?)$/i;
+    const match = message.match(mergeRegex);
+
+    if (match && match.length > 2) {
+      const [fullMessage, branchName, targetBranch] = match;
+
+      // Only make it a link if it matches the mergedFrom branch (which we know exists)
+      if (branchName === mergedBranch) {
+        return (
+          <>
+            Merge{' '}
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); handleBranchClick(mergedBranch); }}
+              style={{ color: '#0066cc', textDecoration: 'none' }}
+            >
+              ⎇ {branchName}
+            </a>
+            {' '}into{' '}{targetBranch}
+          </>
+        );
+      }
+    }
+
+    // Default case: return the plain message
+    return message;
+  };
+
   return (
     <li className="commit-item">
       <div className="commit-item-dot"></div>
       <div className="commit-timestamp">{formatDate(commit.timestamp)}</div>
-      <div className="commit-message">{commit.message}</div>
+      <div className="commit-message">
+        {renderCommitMessage(commit.message, commit.mergedFrom)}
+      </div>
       <div className="commit-author">
         <div className="author-avatar" style={{
           backgroundColor: '#ddd',
@@ -71,19 +103,6 @@ const CommitItem: React.FC<CommitItemProps> = ({ commit, currentBranch }) => {
         </div>
         <span className="author-name">{commit.author?.name}</span>
         <span className="author-email">&lt;{commit.author?.email}&gt;</span>
-
-        {commit.mergedFrom && (
-          <span className="merge-info" style={{ marginLeft: 'auto' }}>
-            Merged from <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); handleBranchClick(commit.mergedFrom || ''); }}
-              className="branch-label"
-              style={{ color: '#0066cc', textDecoration: 'none' }}
-            >
-              <span className="branch-icon">⎇</span>{commit.mergedFrom}
-            </a>
-          </span>
-        )}
       </div>
     </li>
   );
