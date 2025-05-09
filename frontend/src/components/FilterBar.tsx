@@ -68,14 +68,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
           onChange={handleAuthorChange}
         />
       </div>
-      <div className="filter">
-        <input
-          type="text"
-          placeholder="Parent Filter"
-          value={parentFilter}
-          onChange={handleParentChange}
-        />
-      </div>
     </div>
   );
 };
