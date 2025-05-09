@@ -166,7 +166,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 >
                   <span className="author-avatar">{getInitials(author.name)}</span>
                   <span>{author.name}</span>
-                  <span style={{ color: '#888', fontSize: 12, marginLeft: 6 }}>{author.email}</span>
                 </div>
               ))}
               {authors.length > 0 && (
