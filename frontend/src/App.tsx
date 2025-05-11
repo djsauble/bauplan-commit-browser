@@ -91,7 +91,8 @@ const App: React.FC = () => {
             selectedBranch,
             20,
             startDate || undefined,
-            endDate || undefined
+            endDate || undefined,
+            messageFilter || undefined
           );
           setCommits(commitsData);
           // Extract unique authors
@@ -120,7 +121,7 @@ const App: React.FC = () => {
     };
 
     fetchCommits();
-  }, [selectedBranch, dateFilter]);
+  }, [selectedBranch, dateFilter, messageFilter]);
 
   const handleBranchChange = (branchId: string) => {
     if (branchId !== selectedBranch) {

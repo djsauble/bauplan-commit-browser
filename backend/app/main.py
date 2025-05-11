@@ -80,14 +80,16 @@ async def get_commits_by_branch(
     limit: int = 10,
     start_date: str | None = None,
     end_date: str | None = None,
+    message_filter: str | None = None,
     client: bauplan.Client = Depends(get_bauplan_client)
 ) -> list[Commit]:
-    """Get commits for a branch with optional date range filtering."""
+    """Get commits for a branch with optional date range and message filtering."""
     try:
         commits = client.get_commits(
             branch_id,
             filter_by_authored_date_start_at=start_date,
             filter_by_authored_date_end_at=end_date,
+            filter_by_message=message_filter,
             limit=limit
         )
         

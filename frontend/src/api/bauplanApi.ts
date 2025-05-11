@@ -17,16 +17,22 @@ export const fetchCommitsByBranch = async (
   branchId: string,
   limit: number = 20,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  messageFilter?: string
 ): Promise<Commit[]> => {
   try {
+    // Escape special regex characters and wrap in a contains pattern
+    const escapedFilter = messageFilter ? messageFilter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : undefined;
+    const regexFilter = escapedFilter ? `^.*${escapedFilter}.*$` : undefined;
+
     const response = await axios.get<Commit[]>(
       `${API_BASE_URL}/branches/${branchId}/commits`,
       { 
         params: { 
           limit,
           start_date: startDate,
-          end_date: endDate
+          end_date: endDate,
+          message_filter: regexFilter
         } 
       }
     );

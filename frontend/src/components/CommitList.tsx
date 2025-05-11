@@ -25,11 +25,6 @@ const CommitList: React.FC<CommitListProps> = ({
 }) => {
   // Apply filters
   const filteredCommits = commits.filter(commit => {
-    // Apply message filter
-    if (messageFilter && !commit.message.toLowerCase().includes(messageFilter.toLowerCase())) {
-      return false;
-    }
-
     // Apply author filter
     if (authorFilter &&
         (!commit.author?.name?.toLowerCase().includes(authorFilter.toLowerCase()) &&
