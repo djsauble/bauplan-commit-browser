@@ -1,7 +1,7 @@
 # Bauplan commit browser
 
 A web-based interface for exploring the commit history of a given environment using the commit API of Bauplan.
-Technical users (developers, data scientists, ML engineers) can use this understand how their code and data evolved over time.
+Technical users (developers, data scientists, ML engineers) can use this to understand how their code and data evolved over time.
 
 ## Get started
 
