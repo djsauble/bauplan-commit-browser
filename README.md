@@ -40,13 +40,14 @@ React frontend → FastAPI backend → Bauplan API
 
 ## Limitations
 
-* Author filter is limited to the commits that are currently displayed in the UI
+* Author filter is limited to the authors of commits currently displayed in the UI
 * No pagination, the commit list is limited to 20 entries
 
 ## Future improvements
 
 * Breadcrumb which enables quick navigation to the parent(s) of the selected branch
 * Infinite scroll for the commits list
+* Branch selector and author filter should support type-ahead
 * Author filter uses backend to get all authors sorted by number of commits
 * Show not just the commit message but the tables that changed and what the changes were
 * Show status of last job in branch selector and for each task in the commit list (for ref branches)
