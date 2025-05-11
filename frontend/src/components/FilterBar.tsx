@@ -104,19 +104,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
         value={messageFilter}
         onChange={handleMessageChange}
         className="filter"
-        style={{ minWidth: 180 }}
       />
       {/* Date Range Picker */}
       <DateRangePicker
         onChange={handleDateRangeChange}
         value={dateRange}
-        clearIcon={null}
         calendarIcon={null}
-        format="y-MM-dd"
         className="filter date-range-picker"
       />
       {/* Authors Dropdown */}
-      <div className="filter" style={{ position: 'relative', minWidth: 180 }} ref={authorDropdownRef}>
+      <div className="filter" style={{ position: 'relative' }} ref={authorDropdownRef}>
         <div
           className="dropdown-label"
           onClick={() => setIsAuthorDropdownOpen(open => !open)}
