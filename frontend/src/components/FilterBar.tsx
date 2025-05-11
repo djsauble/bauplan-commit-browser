@@ -110,7 +110,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         onChange={handleDateRangeChange}
         value={dateRange}
         calendarIcon={null}
-        className="filter date-range-picker"
+        className="filter"
       />
       {/* Authors Dropdown */}
       <div className="filter" style={{ position: 'relative' }} ref={authorDropdownRef}>
