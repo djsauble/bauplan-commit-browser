@@ -1,7 +1,7 @@
 # Bauplan commit browser
 
 A web-based interface for exploring the commit history of a given environment using the commit API of Bauplan.
-The goal is a small, clean UI that helps technical users (developers, data scientists, ML engineers) understand how their code and data evolved over time.
+Technical users (developers, data scientists, ML engineers) can use this understand how their code and data evolved over time.
 
 ## Get started
 
@@ -36,13 +36,20 @@ Open https://localhost:3000 in your browser. Enjoy!
 
 ## Architecture
 
-* FastAPI backend
-* React frontend
+React frontend → FastAPI backend → Bauplan API
 
 ## Limitations
 
-TBD
+* Author filter is limited to the commits that are currently displayed in the UI
+* No pagination, the commit list is limited to 20 entries
 
 ## Future improvements
 
-TBD
+* Breadcrumb which enables quick navigation to the parent(s) of the selected branch
+* Infinite scroll for the commits list
+* Author filter uses backend to get all authors sorted by number of commits
+* Show not just the commit message but the tables that changed and what the changes were
+* Show status of last job in branch selector and for each task in the commit list (for ref branches)
+* Add ability to run a branch (potentially at an arbitrary commit) so you can re-run a historical snapshot
+* Add ability to merge a branch (treating an environment as a staging area that you ship when ready)
+* Timeline view where you can see which authors contributed to which branches over time
