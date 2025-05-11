@@ -15,12 +15,20 @@ export const fetchBranches = async (): Promise<Branch[]> => {
 
 export const fetchCommitsByBranch = async (
   branchId: string,
-  limit: number = 20
+  limit: number = 20,
+  startDate?: string,
+  endDate?: string
 ): Promise<Commit[]> => {
   try {
     const response = await axios.get<Commit[]>(
       `${API_BASE_URL}/branches/${branchId}/commits`,
-      { params: { limit } }
+      { 
+        params: { 
+          limit,
+          start_date: startDate,
+          end_date: endDate
+        } 
+      }
     );
     return response.data;
   } catch (error) {

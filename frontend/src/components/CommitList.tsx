@@ -30,14 +30,6 @@ const CommitList: React.FC<CommitListProps> = ({
       return false;
     }
 
-    // Apply date filter (simple text match in formatted date)
-    if (dateFilter) {
-      const date = new Date(commit.timestamp).toLocaleDateString();
-      if (!date.includes(dateFilter)) {
-        return false;
-      }
-    }
-
     // Apply author filter
     if (authorFilter &&
         (!commit.author?.name?.toLowerCase().includes(authorFilter.toLowerCase()) &&

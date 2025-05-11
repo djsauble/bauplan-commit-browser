@@ -86,7 +86,13 @@ const App: React.FC = () => {
       if (selectedBranch) {
         try {
           setIsLoading(true);
-          const commitsData = await fetchCommitsByBranch(selectedBranch);
+          const [startDate, endDate] = dateFilter.split('~');
+          const commitsData = await fetchCommitsByBranch(
+            selectedBranch,
+            20,
+            startDate || undefined,
+            endDate || undefined
+          );
           setCommits(commitsData);
           // Extract unique authors
           const uniqueAuthors = Array.from(
@@ -114,7 +120,7 @@ const App: React.FC = () => {
     };
 
     fetchCommits();
-  }, [selectedBranch]);
+  }, [selectedBranch, dateFilter]);
 
   const handleBranchChange = (branchId: string) => {
     if (branchId !== selectedBranch) {

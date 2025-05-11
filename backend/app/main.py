@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import bauplan
 from bauplan.exceptions import BauplanError
+from datetime import datetime
 
 # Load environment variables
 load_dotenv()
@@ -77,10 +78,19 @@ async def get_branches(client: bauplan.Client = Depends(get_bauplan_client)):
 async def get_commits_by_branch(
     branch_id: str,
     limit: int = 10,
+    start_date: str | None = None,
+    end_date: str | None = None,
     client: bauplan.Client = Depends(get_bauplan_client)
-):
+) -> list[Commit]:
+    """Get commits for a branch with optional date range filtering."""
     try:
-        commits = client.get_commits(ref=branch_id, limit=limit)
+        commits = client.get_commits(
+            branch_id,
+            filter_by_authored_date_start_at=start_date,
+            filter_by_authored_date_end_at=end_date,
+            limit=limit
+        )
+        
         transformed_commits = []
         for commit in commits:
             transformed_commit = {
